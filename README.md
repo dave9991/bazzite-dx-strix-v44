@@ -28,7 +28,7 @@ If you are already running an atomic Fedora/Universal Blue system and want to sw
 
 **Step 1: The Initial Pull (Unverified)**
 Open your terminal and run this command to fetch the image and import the new public key:
-```bash
+
 rpm-ostree rebase ostree-unverified-registry:ghcr.io/dave9991/bazzite-dx:latest
 
 Wait for the process to finish, and then reboot your system.
