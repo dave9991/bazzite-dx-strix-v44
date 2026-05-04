@@ -1,51 +1,44 @@
-# Bazzite Developer Edition
+# Bazzite DX - Strix Halo Edition (F44 Base)
 
-[![Build Bazzite DX](https://github.com/ublue-os/bazzite-dx/actions/workflows/build.yml/badge.svg)](https://github.com/ublue-os/bazzite-dx/actions/workflows/build.yml)
+**⚠️ Disclaimer:** This is a quick and dirty build, barely tested. Use at your own risk.
 
-This is just bazzite, but with extra developer-specific tooling, aiming to match [Bluefin DX](https://docs.projectbluefin.io/bluefin-dx/) and [Aurora DX](https://docs.getaurora.dev/dx/aurora-dx-intro) in functionality
+## The Purpose
+I created this fork specifically for hardware that needs bleeding-edge drivers, specifically the new AMD Strix Halo (Ryzen AI Max 300 series) APUs. 
 
-[`bazzite-gdx`](https://github.com/ublue-os/bazzite-gdx) will source from here and be focused for game development.
+Upstream, the Bazzite-DX variants are currently tethered to the `bazzite-deck` base image, which is delayed on an older release cycle for handheld stability. This delay means missing out on the newer Linux kernels, Mesa drivers, and ROCm updates required to make the Strix Halo architecture actually function well.
 
-## Installation
+This fork simply detaches from the handheld release cycle and rebuilds the DX developer environment on top of the standard, cutting-edge Fedora 44 desktop base. 
 
-To rebase an existing Bazzite installation to Bazzite DX, use one of the following commands based on your current variant:
+## Transparency
+Don't just trust random OS images on the internet—look at the commit history. 
 
-**For KDE Plasma (default Bazzite):**
+The only modifications made to this fork from the upstream `ublue-os/bazzite-dx` repository are:
+1. Swapping out the `cosign` cryptographic keys for my own GitHub Actions builder.
+2. Modifying `image-versions.yaml` and `build.yml` to pull from the standard `bazzite` desktop base instead of `bazzite-deck`.
+3. Stripping out the handheld-specific autologin cleanup scripts (since the standard desktop base doesn't have them anyway).
+
+Everything else is standard Universal Blue infrastructure.
+
+## Desktop Environments
+Currently, this only builds the **KDE Plasma** variant. If you need the GNOME version, open an issue and ask nicely, and I'll probably add it to the build matrix.
+
+## Installation / Rebasing Instructions
+
+If you are already running an atomic Fedora/Universal Blue system and want to switch to this build, you need to execute a two-step rebase process to properly import the new security keys.
+
+**Step 1: The Initial Pull (Unverified)**
+Open your terminal and run this command to fetch the image and import the new public key:
 ```bash
-brh rebase bazzite-dx:stable
-```
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/dave9991/bazzite-dx:latest
 
-**For GNOME:**
-```bash
-brh rebase bazzite-dx-gnome:stable
-```
+Wait for the process to finish, and then reboot your system.
 
-### NVIDIA Variants
+Step 2: Lock it Down (Signed)
+Once you are booted into the new image, open your terminal again and run this command to ensure your system only accepts future updates mathematically signed by this repository's key:
 
-**For KDE Plasma with NVIDIA:**
-```bash
-brh rebase bazzite-dx-nvidia:stable
-```
+Bash
+rpm-ostree rebase ostree-image-signed:docker://ghcr.io/dave9991/bazzite-dx:latest
+Wait for the process to finish, and reboot one final time.
 
-**For GNOME with NVIDIA:**
-```bash
-brh rebase bazzite-dx-nvidia-gnome:stable
-```
-
-### ⚠️ Important Desktop Environment Warning
-
-**Do not switch between GNOME and KDE variants!** If you are currently running:
-- **GNOME** (bazzite-gnome*): Only use the `-gnome` variants above
-- **KDE Plasma** (standard bazzite): Only use the variants without `-gnome` in the name
-
-Switching between desktop environments via rebase can break your installation and may require a complete reinstall.
-
-After running the rebase command, reboot your system to complete the installation. 
-
-## Acknowledgments
-
-This project is built upon the work from [amyos](https://github.com/astrovm/amyos)
-
-## Metrics
-
-![Alt](https://repobeats.axiom.co/api/embed/8568b042f7cfba9dd477885ed5ee6573ab78bb5e.svg "Repobeats analytics image")
+Updates
+Future updates can be pulled down manually via the standard atomic update command (rpm-ostree upgrade) or will happen automatically in the background via Bazzite's standard update services whenever GitHub Actions pushes a new daily build.
