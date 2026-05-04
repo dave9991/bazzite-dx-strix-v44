@@ -34,6 +34,7 @@ jobs:
       matrix:
         base_image:
           - bazzite
+          - bazzite-gnome
 
     env:
       BASE_IMAGE: ${{ matrix.base_image }}
