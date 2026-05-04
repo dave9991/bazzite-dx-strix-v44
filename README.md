@@ -36,8 +36,8 @@ Wait for the process to finish, and then reboot your system.
 Step 2: Lock it Down (Signed)
 Once you are booted into the new image, open your terminal again and run this command to ensure your system only accepts future updates mathematically signed by this repository's key:
 
-Bash
 rpm-ostree rebase ostree-image-signed:docker://ghcr.io/dave9991/bazzite-dx:latest
+
 Wait for the process to finish, and reboot one final time.
 
 Updates
