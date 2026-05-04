@@ -20,7 +20,7 @@ The only modifications made to this fork from the upstream `ublue-os/bazzite-dx`
 Everything else is standard Universal Blue infrastructure.
 
 ## Desktop Environments
-Currently, this only builds the **KDE Plasma** variant. If you need the GNOME version, open an issue and ask nicely, and I'll probably add it to the build matrix.
+Currently, this builds the **KDE Plasma** and GNOME variants.
 
 ## Installation / Rebasing Instructions
 
